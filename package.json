@@ -18,5 +18,8 @@
   "homepage": "https://github.com/ktg314/waddup-cuz#readme",
   "engines": {
     "node": "4.x"
+  },
+  "dependencies": {
+    "node-static" : "latest"
   }
 }
