@@ -29,7 +29,7 @@
     <script>
     $(function(){
       $("#nav-placeholder").load("navbar.html");
-      $("#sidebar-placeholder").load("sidebar-albums.html");
+      $("#sidebar-placeholder").load("sidebar-timeline.html");
     });
     </script>
 
@@ -48,7 +48,7 @@
         // just in case there's anything still in the thumbnails div, clear it out
         $tn_div.empty();
         var all_ids = [];
-        $endpoint = $path_to_backend + 'getPhotos.php?grp_id=7654321';
+        $endpoint = $path_to_backend + 'getPhotos.php?grp_id=314159';
         $.getJSON($endpoint, function (data) {
             jQuery.each(data, function (key, val) {
                 all_ids.push(val.id);
