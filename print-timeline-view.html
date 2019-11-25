@@ -22,9 +22,17 @@
   </div>
 <div class="column">
   <div class="container">
-    <a href='print-timeline-view.html'>
-    	<div>Print Photos!</div>
-    </a>
+    <h1>Select Photos to Print</h1>
+      <div id="test3">
+      </div>
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+      <p class="selected-items">Selected images:
+        <span id="numPicturesSelected"></span>
+      </p>
+
+        <button onclick="printBunch()">Print</button>
+
     <!-- Populate Nav & Side bars -->
     <script>
     $(function(){
@@ -105,8 +113,15 @@
                             .attr("src", $path_to_backend + val.src)
                             .attr("id", photo_id)
                             .appendTo($(month_var))
-                            .attr("class", "tn")
-                            .wrap('<a href="viewPhoto.html?id=' + photo_id + '"></a>');
+                            .attr("class", "selectToPrint")
+                            .wrap("<span class='fancychecks'>")
+                            .parent()
+                            .click(function() {
+                              $(this).toggleClass("checked");
+                              var count = $(".checked").length;
+                							var selectedItemList = $("#numPicturesSelected").empty();
+                							selectedItemList.append(count);
+                            });
                         });
                     });
                 }
@@ -121,9 +136,16 @@
                             $("<img />")
                             .attr("src", $path_to_backend + val.src)
                             .attr("id", photo_id)
-                            .appendTo($(month_var)) //or to month_var
-                            .attr("class", "tn")
-                            .wrap('<a href="viewPhoto.html?id=' + photo_id + '"></a>');
+                            .appendTo($(month_var))
+                            .attr("class", "selectToPrint")
+                            .wrap("<span class='fancychecks'>")
+                            .parent()
+                            .click(function() {
+                              $(this).toggleClass("checked");
+                              var count = $(".checked").length;
+                							var selectedItemList = $("#numPicturesSelected").empty();
+                							selectedItemList.append(count);
+                            });
                         });
                     });
                 }
@@ -137,9 +159,16 @@
                         $("<img />")
                         .attr("src", $path_to_backend + val.src)
                         .attr("id", photo_id)
-                        .appendTo($(year_var)) //or to month_var
-                        .attr("class", "tn")
-                        .wrap('<a href="viewPhoto.html?id=' + photo_id + '"></a>');
+                        .appendTo($(month_var))
+                        .attr("class", "selectToPrint")
+                        .wrap("<span class='fancychecks'>")
+                        .parent()
+                        .click(function() {
+                          $(this).toggleClass("checked");
+                          var count = $(".checked").length;
+                          var selectedItemList = $("#numPicturesSelected").empty();
+                          selectedItemList.append(count);
+                        });
                     });
                 });
             }
@@ -150,6 +179,44 @@
         getTimelinePhotos()
     });
 </script>
+
+<script>
+  var count = $(".checked").length;
+  var selectedItemList = $("#numPicturesSelected").empty();
+  selectedItemList.append(count);
+  function checkArray(){
+      console.log($(".checked"));
+      var chkArray = []; //create array
+      //did for loop to get all checked element ids
+      for (var i = 0; i < $(".checked").length; i++) {
+          chkArray.push($(".checked")[i].firstChild.id);
+      }
+      console.log(chkArray);
+      return chkArray;
+  }
+  function printBunch() {
+    var windowUrl = 'about:blank';
+    var uniqueName = new Date();
+    var windowName = 'Print' + uniqueName.getTime();
+    var printWindow = window.open(windowUrl, windowName, 'left=50000,top=50000,width=0,height=0');
+    var chkdImages = checkArray(); //call checkArray
+      console.log("checked Images: " + chkdImages);
+      //for loop through chkdImages
+    for(var i=0; i< chkdImages.length; i++) {
+        var id = chkdImages[i]; //grabbing id by id
+        console.log("printBunch id: " + id);
+        //assuming the image will be the next sibling of the checkbox
+        var currentImage = document.getElementById(id); //getting the elements by id
+        console.log(currentImage);
+        printWindow.document.write("<img src='" + currentImage.src + "' style='width:100px; height:auto; padding-left:10px;padding-bottom:10px;'><br>"); //creates an image tag to make sure computer recognizes each element as an image, src = the actual image of the current image/element
+      }
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+   }
+</script>
+
 
 <div id="timeline-view">
 
