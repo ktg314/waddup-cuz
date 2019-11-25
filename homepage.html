@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="config.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Rubik:300,400,500,700&display=swap" rel="stylesheet">
+    <title>My 331 Photos</title>
+    <style>
+     * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #acb6e5;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #86fde8, #acb6e5);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #86fde8, #acb6e5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+      }
+
+      h2 {
+        font-family: 'Rubik', sans-serif;
+        font-size: 50px;
+      }
+      .container {
+        width: 800px; margin:0 auto;
+        padding-top:50px;
+        margin-top: -30px;
+        height: 100%;
+        }
+
+        .row {
+  display: flex;
+}
+
+.column {
+  flex: 50%;
+}
+.column1 {
+flex: 0%;
+
+  padding: 10px;
+  height: 100px;
+}
+.column2 {
+flex:100%;
+  padding: 10px;
+  height: 100px;
+  text-align:center;
+  margin-bottom: 150px;
+  color: white;
+}
+
+.column3 {
+flex: 0%;
+  padding: 10px;
+  height: 100px;
+}
+
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+}
+
+#upload-image {
+  width: 50%;
+}
+
+        </style>
+</head>
+<body>
+  <div class = "container">
+
+      <div class="row">
+          <div class="column1">
+
+          </div>
+          <div class="column2" id="center">
+            <h2>Family Photo Sharing App</h2>
+          </div>
+          <div class="column3">
+
+          </div>
+        </div>
+
+
+        <div class="row">
+          <div class="column">
+            <a href="albums.html">
+              <img src = "image/view.png" class="center" width = "220" height = "225">
+            </a>
+          </div>
+          <div class="column">
+
+          </div>
+          <div class="column">
+            <a href="upload.html">
+              <img src = "image/upload.png" class="center" id="upload-image" width = "110" height = "230">
+            </a>
+          </div>
+        </div>
+
+        </div>
+        </body>
+        </html>

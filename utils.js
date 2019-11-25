@@ -28,7 +28,8 @@ function getSelectablePhotos3() {
     $.getJSON($endpoint, function(data) {
         jQuery.each(data, function(key, val) {
           $("<img />")
-              .attr("class", "checkable")
+//              .attr("class", "checkable")
+              .attr("class", "selectToPrint")
               .attr("src", $path_to_backend + val.tn_src)
               .attr("id", val.id)
               .appendTo($tn_div)
@@ -36,40 +37,12 @@ function getSelectablePhotos3() {
               .parent()
               .click(function() {
                   $(this).toggleClass("checked");
+                  var count = $(".checked").length;
+		          var selectedItemList = $("#numPicturesSelected").empty();
+		          selectedItemList.append(count);
                 });
         });
     });
-};
-
-function getAllExistingTags() {
-  //get all pictures
-  //make hashset / dictionary of all the Tags
-  //sort and print / show to viewer // allow for clicking?
-  //  first picture can be first in dictionary, get thumbnail (tn_src)
-  // if so, keep track of what photo ids are apart of it
-  // dictionary contents:
-  // tags name: photoIds
-  // ex: summer2019: [12, 13, 38, 41]
-  // retrieve images from the database
-  $endpoint = $path_to_backend + 'getPhotos.php?grp_id=314159';
-  var dict = {};
-  $.getJSON($endpoint, function(data) {
-      jQuery.each(data, function(key, val) {
-          var res = JSON.parse(val.description);
-          var tags = res["tags"];
-          var id = val.id;
-
-          for (tag in tags) {
-            if (tag in dict) {
-              dict[tag].push(id);
-            } else {
-              dict[tag] = [id];
-            }
-          }
-
-      });
-  });
-  console.log(dict);
 }
 
 function getURLParameter(sParam) {

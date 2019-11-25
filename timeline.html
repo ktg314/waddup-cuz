@@ -1,0 +1,388 @@
+timeline.html
+Earlier this week
+12:13 AM
+
+Yanqi Liu uploaded an item
+HTML
+timeline.html
+<!DOCTYPE html>
+<html>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="config.js"></script>
+    <script type="text/javascript" src="http://widgets.wp.com/platform.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>My 331 Project</title>
+</head>
+
+<body>
+
+    <h1>Upload a Photo</h1>
+
+    <form name="uploader" id="uploader" enctype="multipart/form-data">
+        <input name="fupload" type="file" />
+        <p><label for="description">Enter a Description: </label>
+            <textarea rows="6" cols="50" id="description" name="description"></textarea></p>
+        <!--<p><label for="tag">Enter a tag: </label>
+            <input type = "text" id="tag" name="tag" autocomplete="on"></input></p>-->
+        <p><label for="tag">Enter a tag: </label>
+
+        <input type="button" value="Upload Photo">
+        </form>
+        <progress value="" max=""></progress>
+
+        <span id="ImageDate"></span>
+
+        <form autocomplete="off" action="/action_page.php">
+            <div class="autocomplete" style="width:300px;">
+              <input id="myInput" type="text" name="myTag" placeholder="Tag">
+            </div>
+        </form>
+
+        <script>
+            function autocomplete(inp, arr) {
+            /*the autocomplete function takes two arguments,
+            the text field element and an array of possible autocompleted values:*/
+            var currentFocus;
+            /*execute a function when someone writes in the text field:*/
+            inp.addEventListener("input", function(e) {
+                var a, b, i, val = this.value;
+                /*close any already open lists of autocompleted values*/
+                closeAllLists();
+                if (!val) { return false;}
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                  /*check if the item starts with the same letters as the text field value:*/
+                  if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                  }
+                }
+            });
+            /*execute a function presses a key on the keyboard:*/
+            inp.addEventListener("keydown", function(e) {
+                var x = document.getElementById(this.id + "autocomplete-list");
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                  /*If the arrow DOWN key is pressed,
+                  increase the currentFocus variable:*/
+                  currentFocus++;
+                  /*and and make the current item more visible:*/
+                  addActive(x);
+                } else if (e.keyCode == 38) { //up
+                  /*If the arrow UP key is pressed,
+                  decrease the currentFocus variable:*/
+                  currentFocus--;
+                  /*and and make the current item more visible:*/
+                  addActive(x);
+                } else if (e.keyCode == 13) {
+                  /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                  e.preventDefault();
+                  if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                  }
+                }
+            });
+            function addActive(x) {
+              /*a function to classify an item as "active":*/
+              if (!x) return false;
+              /*start by removing the "active" class on all items:*/
+              removeActive(x);
+              if (currentFocus >= x.length) currentFocus = 0;
+              if (currentFocus < 0) currentFocus = (x.length - 1);
+              /*add class "autocomplete-active":*/
+              x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+              /*a function to remove the "active" class from all autocomplete items:*/
+              for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+              }
+            }
+            function closeAllLists(elmnt) {
+              /*close all autocomplete lists in the document,
+              except the one passed as an argument:*/
+              var x = document.getElementsByClassName("autocomplete-items");
+              for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                  x[i].parentNode.removeChild(x[i]);
+                }
+              }
+            }
+            /*execute a function when someone clicks in the document:*/
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+        }
+
+        /*An array containing all the album tags */
+        var albums =["Graduation", "Birthday", "Travel", "Christmas", "Thanksgiving"];
+
+        /*initiate the autocomplete function on the "myInput" element, and pass along the tag array as possible autocomplete values:*/
+        autocomplete(document.getElementById("myInput"), albums);
+
+        var now, lastModified, date, file;
+
+        // verification for the file
+        $(':file').on('change', function () {
+            file = this.files[0];
+            //console.log("name", file.name);
+            if (file.size > 10485760) {
+                alert('Max upload size is 10 MB.');
+                $(':file').val('');
+            }
+        });
+
+        $(':button').on('click', function () {
+            var tag = document.getElementById("myInput").value;
+            // for data, we want to submit the photo and the description
+            var tags = '"tags": ["' + tag + '"]';
+            //var tags = '"tags": ["summer2019"]';
+            //set upload time to current date
+            var now = new Date(document.lastModified);
+            var day = now.getDate();
+            var month = now.getMonth()+1;
+            var year = now.getFullYear();
+            //var date = '"date": "'+ day +'/'+ month + '/'+ year + '"';
+            //var date = '"date": "10/11/2019"';
+            const date = new Date(2019, 4, 21);
+            var json_date = '"date": "'+ date+'"';
+
+            var photoFormData = new FormData(document.forms['uploader']);
+            var user_desc = photoFormData.get('description');
+            var user_desc_as_json = '"user_desc": "' + user_desc + '"';
+            var json_text = "{ "
+              + tags + ", "
+              + json_date + ", "
+              + user_desc_as_json
+              + "}";
+            photoFormData.set('description', json_text);
+            photoFormData.append('grp_id', 7654321);
+
+            // Print Form data
+            for (var pair of photoFormData.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]);
+            }
+
+            console.log(photoFormData);
+            $.ajax({
+                url: $path_to_backend + 'uploadPhoto.php',
+                type: 'POST',
+                data: photoFormData,
+                // responseType: 'application/json',
+
+                // some flags for jQuery
+                cache: false,
+                contentType: false,
+                processData: false,
+
+                // Custom XMLHttpRequest
+                xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        // For handling the progress of the upload
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                $('progress').attr({
+                                    value: e.loaded,
+                                    max: e.total,
+                                });
+                            }
+                        } , false);
+                    }
+                    return myXhr;
+                }
+            })
+            .done(function()
+            {
+                // let user know upload finished
+                alert("File uploaded!");
+                // refresh photos
+                fetchPhotos();
+                // clear the upload form
+                $(':file').val('');
+                $('#description').val('');
+            });
+        });
+    </script>
+
+<p id="ImageDate"></p>
+<div id="descr"></div>
+
+<script type="text/javascript">
+    $.ajaxSetup({
+        async: false
+    });
+
+    var $descr = $('#descr');
+    function fetchPhotos() {
+        // get the dive where the images should go
+        var $tn_div = $("#thumbs");
+        // just in case there's anything still in the thumbnails div, clear it out
+        $tn_div.empty();
+        var all_ids = [];
+        $endpoint = $path_to_backend + 'getPhotos.php?grp_id=7654321';
+        $.getJSON($endpoint, function (data) {
+            jQuery.each(data, function (key, val) {
+                all_ids.push(val.id);
+            });
+        });
+        //console.log(all_ids);
+
+        var all_dates = [];
+
+        var $viewer = $("#viewer");
+		var $descr = $('#descr');
+        var $tags = $('#date');
+
+        // retrieve images from the database
+        for (i in all_ids) {
+            photo_id = all_ids[i];
+            $endpoint = $path_to_backend + 'viewPhoto.php?id=' + photo_id;
+            $.getJSON($endpoint, function(data)
+            {
+                jQuery.each(data, function(key, val)
+                {
+                    var res = JSON.parse(val.description);
+                    var date = res["date"];
+                    all_dates.push({photo_id, date});
+                });
+            });
+        };
+        /* sort the dates */
+        all_dates.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return new Date(b.date) - new Date(a.date);
+        });
+        //console.log(all_dates);
+
+        var $month = $("#month");
+        var $year = $("year");
+        var first_date = new Date(all_dates[0].date);
+        var prev_year = first_date.getFullYear();
+        var prev_month = first_date.getMonth();
+
+        $("#timeline-view").append("<div id=" + prev_year + ">" + prev_year + "</div>");
+        var year_var = "#" + prev_year; //#1987
+        $(year_var).append("<div id=" + prev_month + ">" + prev_month + "</div>")
+        var month_var = "#" + prev_month;
+        for(i in all_dates) {
+            photo_id = all_ids[i];
+            //console.log(photo_id);
+            var next_date = new Date(all_dates[i].date);
+            if(next_date.getFullYear() == prev_year) {
+                if(next_date.getMonth() == prev_month) {
+                    $.getJSON($endpoint, function(data) {
+                        jQuery.each(data, function(key, val) {
+                            $("<img />")
+                            .attr("src", $path_to_backend + val.src)
+                            .attr("id", photo_id)
+                            .appendTo($(month_var)) //or to month_var
+                            .attr("class", "tn")
+                            .wrap('<a href="viewPhoto.html?id=' + photo_id + '"></a>');
+                        });
+                    });
+                }
+                else {
+                    $(year_var).append("<div id=" + next_date.getMonth() + ">" + next_date.getMonth() + "</div>")
+                    month_var = "#" + next_date.getMonth();
+                    $.getJSON($endpoint, function(data) {
+                        jQuery.each(data, function(key, val) {
+                            $("<img />")
+                            .attr("src", $path_to_backend + val.src)
+                            .attr("id", photo_id)
+                            .appendTo($(month_var)) //or to month_var
+                            .attr("class", "tn")
+                            .wrap('<a href="viewPhoto.html?id=' + photo_id + '"></a>');
+                        });
+                    });
+                }
+            }
+            else {
+                $("#timeline-view").append("<div id=" + next_date.getFullYear() + ">" + next_date.getFullYear() + "</div>");
+                year_var = "#" + next_date.getFullYear();
+                $.getJSON($endpoint, function(data) {
+                    jQuery.each(data, function(key, val) {
+                        $("<img />")
+                        .attr("src", $path_to_backend + val.src)
+                        .attr("id", photo_id)
+                        .appendTo($(year_var)) //or to month_var
+                        .attr("class", "tn")
+                        .wrap('<a href="viewPhoto.html?id=' + photo_id + '"></a>');
+                    });
+                });
+            }
+        }
+
+    };
+    $(document).ready(function () {
+        fetchPhotos()
+    });
+</script>
+
+<div id="timeline-view">
+    <div class="w3-container w3-teal">
+        <h1>2019</h1>
+    </div>
+
+    <div class="w3-row-padding w3-margin-top">
+
+            <div class="w3-card">
+                    <div id="thumbs"></div>
+
+                    <div class="w3-container">
+                        <h4>November</h4>
+                    </div>
+                </div>
+
+        <div class="w3-third">
+            <div class="w3-card">
+                <div id="thumbs"></div>
+
+                <div class="w3-container">
+                    <h4>October</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="w3-row-padding w3-margin-top">
+    </div>
+
+    <div class="w3-container w3-teal">
+        <h1>2018</h1>
+    </div>
+
+    <div class="w3-row-padding w3-margin-top">
+</div>
+
+</body>
+
+</html>
