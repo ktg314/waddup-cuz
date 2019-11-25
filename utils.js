@@ -28,7 +28,6 @@ function getSelectablePhotos3() {
     $.getJSON($endpoint, function(data) {
         jQuery.each(data, function(key, val) {
           $("<img />")
-//              .attr("class", "checkable")
               .attr("class", "selectToPrint")
               .attr("src", $path_to_backend + val.tn_src)
               .attr("id", val.id)

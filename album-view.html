@@ -20,14 +20,16 @@
 		  <div class="container">
   <h1 id="albumTitle"></h1> <!--put in script the name of the album just navigated to-->
 
-  <div id="showPhotos">
+	<div id="printPhotos"></div>
 
-  </div>
+	<div id="showPhotos"></div>
 
 	<script>
 	$(function(){
 	  $("#nav-placeholder").load("navbar.html");
 	  $("#sidebar-placeholder").load("sidebar-albums.html");
+		var albumName = getURLParameter('id')
+		$("#printPhotos").append("<div><a href='print-album-view.html?id=" + albumName + "'>Print Photos!</a></div>");
 	});
 	</script>
 

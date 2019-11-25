@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="config.js"></script>
+	<script src="utils.js"></script>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link href="https://fonts.googleapis.com/css?family=Roboto|Rubik:300,400,500,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+	<title>My 331 Photos - Individual Album View</title>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+	<div class="row">
+	  <div class="column">
+	      <div id="sidebar-placeholder"></div>
+	  </div>
+		<div class="column">
+		  <div class="container">
+  <h1 id="albumTitle"></h1> <!--put in script the name of the album just navigated to-->
+  <h1>Select Photos to Print</h1>
+  	<div id="test3">
+  	</div>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  	<p class="selected-items">Selected images:
+  		<span id="numPicturesSelected"></span>
+  	</p>
+
+      <button onclick="printBunch()">Print</button>
+
+  		<script>
+  		$(function(){
+  		  $("#nav-placeholder").load("navbar.html");
+  		  $("#sidebar-placeholder").load("sidebar-albums.html");
+  		});
+  		</script>
+
+  	<!-- Imported JQuery Libraries  -->
+  	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+  	<script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+
+
+<!-- Getting Tags -->
+<script>
+	//get albums through id from local storage
+	$.ajaxSetup({
+			async: false
+	});
+
+	var dict = {};
+	function getAllExistingTags() {
+		$endpoint = $path_to_backend + 'getPhotos.php?grp_id=7654321';
+		var all_ids = [];
+		$status = $.getJSON($endpoint, function(data) {
+				jQuery.each(data, function(key, val) {
+					console.log(val.id);
+					all_ids.push(val.id);
+				});
+		});
+		$status.done(function() {
+			console.log(all_ids);
+			for (x in all_ids) {
+				id = all_ids[x]
+				console.log(id);
+				$endpoint = $path_to_backend + 'viewPhoto.php?id=' + id;
+				stat = $.getJSON($endpoint, function(data) {
+					jQuery.each(data, function(key, val) {
+						var res = JSON.parse(val.description);
+						var tags = res["tags"];
+						console.log(tags);
+						for (y in tags) {
+							tag = tags[y]
+							if (tag in dict) {
+								dict[tag].push(id);
+							} else {
+								dict[tag] = [id];
+							}
+						}
+					});
+				});
+				stat.done(console.log(dict));
+			}
+		})
+		console.log(dict);
+	};
+	getAllExistingTags();
+
+/////
+	var albumName = getURLParameter('id');
+	$("#albumTitle").append("<h1>" + albumName + "</h1>"); //can use the album to create the title
+	var albumPictures = dict[albumName];
+	console.log(albumPictures);
+	var showPhotos = $("#showPhotos");
+
+	var $tn_div = $("#test3");
+	$tn_div.empty();
+	for (x in albumPictures) {
+		photoId = albumPictures[x];
+		$endpoint = $path_to_backend + 'viewPhoto.php?id=' + photoId;
+		$.getJSON($endpoint, function(data) {
+			jQuery.each(data, function(key, val) {
+				$("<img />")
+						.attr("src", $path_to_backend + val.src)
+						.attr("id", photoId)
+						.appendTo($tn_div)
+						.attr("class", "selectToPrint")
+						.wrap("<span class='fancychecks'>")
+						.parent()
+						.click(function() {
+							$(this).toggleClass("checked");
+							var count = $(".checked").length;
+							var selectedItemList = $("#numPicturesSelected").empty();
+							selectedItemList.append(count);
+						});
+		});
+	});
+};
+
+</script>
+
+
+    <script>
+  		var count = $(".checked").length;
+  		var selectedItemList = $("#numPicturesSelected").empty();
+  		selectedItemList.append(count);
+      function checkArray(){
+          console.log($(".checked"));
+          var chkArray = []; //create array
+          //did for loop to get all checked element ids
+          for (var i = 0; i < $(".checked").length; i++) {
+              chkArray.push($(".checked")[i].firstChild.id);
+          }
+          console.log(chkArray);
+          return chkArray;
+      }
+      function printBunch() {
+        var windowUrl = 'about:blank';
+        var uniqueName = new Date();
+        var windowName = 'Print' + uniqueName.getTime();
+        var printWindow = window.open(windowUrl, windowName, 'left=50000,top=50000,width=0,height=0');
+        var chkdImages = checkArray(); //call checkArray
+          console.log("checked Images: " + chkdImages);
+          //for loop through chkdImages
+        for(var i=0; i< chkdImages.length; i++) {
+            var id = chkdImages[i]; //grabbing id by id
+            console.log("printBunch id: " + id);
+            //assuming the image will be the next sibling of the checkbox
+            var currentImage = document.getElementById(id); //getting the elements by id
+            console.log(currentImage);
+            printWindow.document.write("<img src='" + currentImage.src + "' style='width:100px; height:auto; padding-left:10px;padding-bottom:10px;'><br>"); //creates an image tag to make sure computer recognizes each element as an image, src = the actual image of the current image/element
+          }
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+       }
+    </script>
+
+  </body>
+  </html>
