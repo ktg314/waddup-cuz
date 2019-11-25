@@ -12,7 +12,7 @@
 
 /*<------top nav------>*/
 .topnav {
-  background-color: #001730;
+  background-color: #004158;
   overflow: hidden;
 
 }
@@ -26,15 +26,15 @@ font-family: 'Rubik', sans-serif;
   text-decoration: none;
   font-size: 17px;
      height: 100px;
+     width: 50%;
 }
 
 .topnav a:hover {
-  /*background-color: #1a314a;*/
-  color: #4AD7D1;
+  color: #9EDAE8;
 }
 
 .topnav a.active {
-  background-color: #4AD7D1;
+  background-color: #9EDAE8;
   color: white;
 }
 
@@ -63,11 +63,11 @@ font-family: 'Rubik', sans-serif;
 }
 
 .sidebar a:hover {
-  color: #FE4A49;
+  color: #9EDAE8;
 }
 
 .sidebar a.active {
-  color: #FE4A49;
+  color: #9EDAE8;
 }
 
 
