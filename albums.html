@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="config.js"></script>
+    <script src="utils.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Rubik:300,400,500,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <title>My 331 Photos</title>
+
+</head>
+
+<body>
+  <div id="nav-placeholder"></div>
+<div class="row">
+  <div class="column">
+      <div id="sidebar-placeholder"></div>
+  </div>
+<div class="column">
+  <div class="container">
+    <h1>Tags / Albums</h1>
+    <form id="newAlbumForm">
+      <label for="albumName">Create new album: </label>
+      <input type="text" id="name" name="name">
+      <button id="newAlbum">Create</button>
+    </form>
+    <h2>View All Albums</h2>
+    <div id="albumView"></div>
+  </div>
+</div>
+
+<!-- Populate Nav & Side bars -->
+<script>
+$(function(){
+  $("#nav-placeholder").load("navbar.html");
+  $("#sidebar-placeholder").load("sidebar.html");
+});
+</script>
+
+  <script type="text/javascript">
+    // getAllExistingTags();
+    $.ajaxSetup({
+        async: false
+    });
+
+    var dict = {};
+    function getAllExistingTags() {
+      //get all pictures
+      //make hashset / dictionary of all the Tags
+      //sort and print / show to viewer // allow for clicking?
+      //  first picture can be first in dictionary, get thumbnail (tn_src)
+      // if so, keep track of what photo ids are apart of it
+      // dictionary contents:
+      // tags name: photoIds
+      // ex: summer2019: [12, 13, 38, 41]
+      // retrieve images from the database
+      $endpoint = $path_to_backend + 'getPhotos.php?grp_id=7654321';
+      var all_ids = [];
+      $status = $.getJSON($endpoint, function(data) {
+          jQuery.each(data, function(key, val) {
+            console.log(val.id);
+            all_ids.push(val.id);
+          });
+      });
+      $status.done(function() {
+        console.log(all_ids);
+        for (x in all_ids) {
+          id = all_ids[x]
+          console.log(id);
+          $endpoint = $path_to_backend + 'viewPhoto.php?id=' + id;
+          stat = $.getJSON($endpoint, function(data) {
+            jQuery.each(data, function(key, val) {
+              var res = JSON.parse(val.description);
+              var tags = res["tags"];
+              console.log(tags);
+              for (y in tags) {
+                tag = tags[y]
+                if (tag in dict) {
+                  dict[tag].push(id);
+                } else {
+                  dict[tag] = [id];
+                }
+              }
+            });
+          });
+          stat.done(console.log(dict));
+        }
+      })
+      console.log(dict);
+    };
+    getAllExistingTags();
+
+////////////////////////////////////////////
+//viewing all albums in alphabetical order
+    let albums = Object.keys(dict);
+
+    // The sort method can accept a callback indicating how to sort the elements
+    albums.sort();
+    console.log(albums);
+    for (let i=0; i<albums.length; i++) {
+      $("#albumView").append("<div><a href='album-view.html?id=" + albums[i] + "'>" + albums[i] + "</a></div>");
+    }
+
+
+  </script>
+</body>
+</html>

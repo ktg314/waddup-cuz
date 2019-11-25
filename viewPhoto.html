@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="config.js"></script>
+	<script src="utils.js"></script>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>My 331 Photos - Detail View</title>
+</head>
+<body>
+
+	<h1>Photo</h1>
+
+	<div id="viewer"></div>
+
+	<h2>Description</h2>
+
+	<div id="descr"></div>
+
+	<h3>Tags</h3>
+
+	<div id="tags"></div>
+
+	<script>
+		var $viewer = $('viewer');
+		var $descr = $('#descr');
+		var $tags = $('#tags');
+		var photo_id = getURLParameter('id');
+		$endpoint = $path_to_backend + 'viewPhoto.php?id=' + photo_id;
+		$.getJSON($endpoint, function(data)
+        {
+            jQuery.each(data, function(key, val)
+            {
+								var res = JSON.parse(val.description);
+								console.log(res);
+								var string_desc = res["user_desc"];
+								var string_tags = res["tags"];
+
+                $("<img />")
+                  .attr("src", $path_to_backend + val.src)
+                  .appendTo($viewer);
+                $("<p />")
+                	.text(string_desc)
+                	.appendTo($descr);
+								$("<p />")
+									.text(string_tags)
+									.appendTo($tags);
+
+            });
+        });
+	</script>
+
+    <h1>Enter a New Description</h1>
+
+    <form name="description" id="descr_form" enctype="multipart/form-data">
+        <p><textarea rows="6" cols="50" id="descr_text" name="description"></textarea></p>
+        <input type="button" id="descr_submit" value="Submit New Description">
+    </form>
+
+	<h1>Delete this Photo</h1>
+
+    <form name="delete_this" enctype="multipart/form-data" method="post" action="index.php">
+        <p><input type="button" id="delete_button" value="Delete this Photo" name="delete" /></p>
+    </form>
+
+    <script type="text/javascript">
+        $('#delete_button').on('click', function()
+        {
+            // console.log(photo_id);
+            $.ajax({
+                url: $path_to_backend + 'deletePhoto.php',
+                type: 'POST',
+                data: {id: photo_id}
+
+                // some flags for jQuery
+                // cache: false,
+                // contentType: false,
+                // processData: false
+
+            })
+            .done(function()
+            {
+                // let user know the photo was deleted
+                alert("File " + photo_id + " deleted!");
+                location.href = "index.html";
+            });
+        });
+
+        $('#descr_submit').on('click', function()
+        {
+            console.log('updating description');
+            $.ajax({
+                url: $path_to_backend + 'updatePhoto.php',
+                type: 'POST',
+                data: {id: photo_id,
+                    description: $('#descr_text').val()}
+            })
+            .done(function()
+            {
+                alert("Description updated for photo " + photo_id);
+                location.href = "viewPhoto.html?id=" + photo_id;
+            });
+        });
+    </script>
+
+</body>
+</html>

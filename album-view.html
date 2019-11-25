@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="config.js"></script>
+	<script src="utils.js"></script>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link href="https://fonts.googleapis.com/css?family=Roboto|Rubik:300,400,500,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+	<title>My 331 Photos - Individual Album View</title>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+	<div class="row">
+	  <div class="column">
+	      <div id="sidebar-placeholder"></div>
+	  </div>
+		<div class="column">
+		  <div class="container">
+  <h1 id="albumTitle"></h1> <!--put in script the name of the album just navigated to-->
+
+  <div id="showPhotos">
+
+  </div>
+
+	<script>
+	$(function(){
+	  $("#nav-placeholder").load("navbar.html");
+	  $("#sidebar-placeholder").load("sidebar.html");
+	});
+	</script>
+
+  <script>
+    //get albums through id from local storage
+		$.ajaxSetup({
+        async: false
+    });
+
+    var dict = {};
+    function getAllExistingTags() {
+      //get all pictures
+      //make hashset / dictionary of all the Tags
+      //sort and print / show to viewer // allow for clicking?
+      //  first picture can be first in dictionary, get thumbnail (tn_src)
+      // if so, keep track of what photo ids are apart of it
+      // dictionary contents:
+      // tags name: photoIds
+      // ex: summer2019: [12, 13, 38, 41]
+      // retrieve images from the database
+      $endpoint = $path_to_backend + 'getPhotos.php?grp_id=7654321';
+      var all_ids = [];
+      $status = $.getJSON($endpoint, function(data) {
+          jQuery.each(data, function(key, val) {
+            console.log(val.id);
+            all_ids.push(val.id);
+          });
+      });
+      $status.done(function() {
+        console.log(all_ids);
+        for (x in all_ids) {
+          id = all_ids[x]
+          console.log(id);
+          $endpoint = $path_to_backend + 'viewPhoto.php?id=' + id;
+          stat = $.getJSON($endpoint, function(data) {
+            jQuery.each(data, function(key, val) {
+              var res = JSON.parse(val.description);
+              var tags = res["tags"];
+              console.log(tags);
+              for (y in tags) {
+                tag = tags[y]
+                if (tag in dict) {
+                  dict[tag].push(id);
+                } else {
+                  dict[tag] = [id];
+                }
+              }
+            });
+          });
+          stat.done(console.log(dict));
+        }
+      })
+      console.log(dict);
+    };
+    getAllExistingTags();
+
+/////
+		var albumName = getURLParameter('id');
+		$("#albumTitle").append("<h1>" + albumName + "</h1>"); //can use the album to create the title
+		var albumPictures = dict[albumName];
+		console.log(albumPictures);
+		var showPhotos = $("#showPhotos");
+
+		for (x in albumPictures) {
+			photoId = albumPictures[x];
+      $endpoint = $path_to_backend + 'viewPhoto.php?id=' + photoId;
+      $.getJSON($endpoint, function(data) {
+        jQuery.each(data, function(key, val) {
+					$("<img />")
+							.attr("src", $path_to_backend + val.src)
+							.attr("id", photoId)
+							.appendTo(showPhotos)
+							.attr("class", "tn")
+							.wrap('<a href="viewPhoto.html?id=' + photoId + '"></a>');
+				});
+      });
+    };
+
+  </script>
+
+</body>
+</html>

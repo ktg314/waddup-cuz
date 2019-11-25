@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="config.js"></script>
+    <script src="utils.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>My 331 Photos</title>
+</head>
+<body>
+    <h1>All Photos</h1>
+
+    <div id="thumbs"></div>
+
+    <script>
+        $(document).ready(fetchPhotos());
+    </script>
+
+    <h1>Upload a Photo</h1>
+
+    <form name="uploader" id="uploader" enctype="multipart/form-data">
+        <input name="fupload" type="file" />
+        <p><label for="description">Enter a Description: </label>
+        <textarea rows="6" cols="50" id="description" name="description"></textarea></p>
+        <input type="button" value="Upload Photo">
+    </form>
+    <progress value="" max=""></progress>
+    <script type="text/javascript">
+
+        // verification for the file
+        $(':file').on('change', function()
+        {
+            var file = this.files[0];
+            if (file.size > 10485760)
+            {
+                alert('Max upload size is 10 MB.');
+                $(':file').val('');
+            }
+            // alert(file.name);
+            // alert(file.type);
+        });
+
+        $(':button').on('click', function()
+        {
+            // for data, we want to submit the photo and the description
+            var tags = '"tags": ["summer2019"]';
+            //set upload time to current date
+            var now = new Date(document.lastModified);
+            var day = now.getDate();
+            var month = now.getMonth()+1;
+            var year = now.getFullYear();
+            var date = '"date": "'+ day +'/'+ month + '/'+ year + '"';
+
+            var photoFormData = new FormData(document.forms['uploader']);
+            var user_desc = photoFormData.get('description');
+            var user_desc_as_json = '"user_desc": "' + user_desc + '"';
+            var json_text = "{ "
+              + tags + ", "
+              + date + ", "
+              + user_desc_as_json
+              + "}";
+            photoFormData.set('description', json_text);
+            photoFormData.append('grp_id', 314159);
+
+            // Print Form data
+            for (var pair of photoFormData.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]);
+            }
+
+            console.log(photoFormData);
+            $.ajax({
+                url: $path_to_backend + 'uploadPhoto.php',
+                type: 'POST',
+                data: photoFormData,
+                // responseType: 'application/json',
+
+                // some flags for jQuery
+                cache: false,
+                contentType: false,
+                processData: false,
+
+                // Custom XMLHttpRequest
+                xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if (myXhr.upload) {
+                        // For handling the progress of the upload
+                        myXhr.upload.addEventListener('progress', function(e) {
+                            if (e.lengthComputable) {
+                                $('progress').attr({
+                                    value: e.loaded,
+                                    max: e.total,
+                                });
+                            }
+                        } , false);
+                    }
+                    return myXhr;
+                }
+            })
+            .done(function()
+            {
+                // let user know upload finished
+                alert("File uploaded!");
+                // refresh photos
+                fetchPhotos();
+                // clear the upload form
+                $(':file').val('');
+                $('#description').val('');
+            });
+        });
+    </script>
+
+</body>
+</html>

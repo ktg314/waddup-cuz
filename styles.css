@@ -1,0 +1,91 @@
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+    width: 1200px; margin:62px auto;
+    margin-left: 50px;
+    clear: left;
+    font-family: 'Rubik', sans-serif;
+    }
+
+/*<------top nav------>*/
+.topnav {
+  background-color: #001730;
+  overflow: hidden;
+
+}
+
+.topnav a {
+  float: left;
+  color: white;
+  text-align: center;
+font-family: 'Rubik', sans-serif;
+  padding: 40px 250px;
+  text-decoration: none;
+  font-size: 17px;
+     height: 100px;
+}
+
+.topnav a:hover {
+  /*background-color: #1a314a;*/
+  color: #4AD7D1;
+}
+
+.topnav a.active {
+  background-color: #4AD7D1;
+  color: white;
+}
+
+/*<------------------------------->*/
+
+ /*<------side view nav------>*/
+        .sidebar {
+  height: 500px;
+  width: 240px;
+  background-color: #001730;
+  overflow-x: hidden;
+  padding-top: 16px;
+  margin-top: 28px;
+  padding-left: 50px;
+  padding-bottom: 55px;
+  text-align: left;
+}
+
+.sidebar a {
+  padding: 6px 0px 15px 0px;
+  text-decoration: none;
+  font-size: 24px;
+  color: #ffffff;
+  display: block;
+  font-family: 'Rubik', sans-serif, '700';
+}
+
+.sidebar a:hover {
+  color: #FE4A49;
+}
+
+.sidebar a.active {
+  color: #FE4A49;
+}
+
+
+/*<------------------------------->*/
+
+
+    .column {
+float: left;
+width: 15%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+content: "";
+display: table;
+clear: both;
+}
+
+ /*   <------------------------------------>*/
+  /*  to style the text fields:
+      https://scotch.io/tutorials/google-material-design-input-boxes-in-css3 —> google text field form code*/
