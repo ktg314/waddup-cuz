@@ -83,23 +83,16 @@
     <script type="text/javascript">
         $('#delete_button').on('click', function()
         {
-            // console.log(photo_id);
             $.ajax({
                 url: $path_to_backend + 'deletePhoto.php',
                 type: 'POST',
                 data: {id: photo_id}
-
-                // some flags for jQuery
-                // cache: false,
-                // contentType: false,
-                // processData: false
-
             })
             .done(function()
             {
                 // let user know the photo was deleted
                 alert("File " + photo_id + " deleted!");
-                location.href = "index.html";
+                location.href = "timeline.html";
             });
         });
 

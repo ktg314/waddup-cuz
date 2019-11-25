@@ -203,6 +203,7 @@
                     var month = now.getMonth()+1;
                     var year = now.getFullYear();
                     const date = new Date(year, month, day);
+										console.log(date);
                     var json_date = '"date": "' + date + '"';
 
                     var photoFormData = new FormData(document.forms['uploader']);
