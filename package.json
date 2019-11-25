@@ -1,0 +1,22 @@
+{
+  "name": "waddup-cuz",
+  "version": "1.0.0",
+  "description": "CSE331 Project",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ktg314/waddup-cuz.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ktg314/waddup-cuz/issues"
+  },
+  "homepage": "https://github.com/ktg314/waddup-cuz#readme",
+  "engines": {
+    "node": "4.x"
+  }
+}
